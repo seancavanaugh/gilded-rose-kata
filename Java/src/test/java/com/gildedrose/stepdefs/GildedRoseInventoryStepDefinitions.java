@@ -6,17 +6,15 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.IntStream;
 
 import static java.lang.Integer.parseInt;
 import static java.util.Arrays.stream;
 import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class GildedRoseInventoryStepdefs {
+public class GildedRoseInventoryStepDefinitions {
     private static final String NAME = "name";
     private static final String SELLIN = "sellin";
     private static final String QUALITY = "quality";
@@ -25,7 +23,7 @@ public class GildedRoseInventoryStepdefs {
     @Given("^we have a list of items in stock$")
     public void weHaveAListOfItemsInStock(List<Map<String, String>> data) {
         Item[] items = data.stream()
-                .map(row -> new Item(row.get(NAME), parseInt(row.get(SELLIN)), parseInt(row.get(QUALITY))))
+                .map(this::mapToItem)
                 .toArray(Item[]::new);
         gildedRose = new GildedRose(items);
     }
@@ -53,5 +51,9 @@ public class GildedRoseInventoryStepdefs {
         return expectedItem.get(NAME).equals(actualItem.name)
                 && parseInt(expectedItem.get(QUALITY)) == actualItem.quality
                 && parseInt(expectedItem.get(SELLIN)) == actualItem.sellIn;
+    }
+
+    private Item mapToItem(Map<String, String> row) {
+        return new Item(row.get(NAME), parseInt(row.get(SELLIN)), parseInt(row.get(QUALITY)));
     }
 }
