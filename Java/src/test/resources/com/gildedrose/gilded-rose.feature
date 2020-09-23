@@ -104,3 +104,12 @@ Feature: Gilded Rose Inventory System
     Then we should have the following updated items in stock
       | name               | sellin | quality |
       | Conjured Mana Cake | 8      | 6       |
+
+  Scenario: Conjured items degrade in quality four times as fast after sellin
+    Given we have a list of items in stock
+      | name               | sellin | quality |
+      | Conjured Mana Cake | 2      | 20      |
+    When 3 days passes
+    Then we should have the following updated items in stock
+      | name               | sellin | quality |
+      | Conjured Mana Cake | -1     | 12      |

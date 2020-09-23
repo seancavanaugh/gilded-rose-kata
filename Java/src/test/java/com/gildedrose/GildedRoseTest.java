@@ -99,6 +99,16 @@ public class GildedRoseTest {
         assertItem(items[0], "Conjured Mana Cake", 7, 4);
     }
 
+    @Test
+    public void conjuredItemsDecreaseFourTimesAsFastAfterSellin() throws Exception {
+        Item[] items = new Item[]{
+                new Item("Conjured Mana Cake", 2, 20)
+        };
+        gildedRose = new GildedRose(items);
+        passNumberOfDays(3);
+        assertItem(items[0], "Conjured Mana Cake", -1, 12);
+    }
+
     private void assertItem(Item item, String name, int sellIn, int quality) {
         assertEquals(name, item.name);
         assertEquals(sellIn, item.sellIn);

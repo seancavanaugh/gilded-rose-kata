@@ -1,6 +1,5 @@
 package com.gildedrose;
 
-import java.util.Arrays;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -28,31 +27,35 @@ public class GildedRose {
                 continue;
             }
             if (ITEMS_THAT_INCREASE_OVER_TIME.contains(item.name)) {
-                updateQuality(item, 1);
+                updateQualityFor(item, 1);
                 if (BACKSTAGE_PASSES.equals(item.name) && item.sellIn < 11) {
-                    updateQuality(item, 1);
+                    updateQualityFor(item, 1);
                     if (item.sellIn < 6) {
-                        updateQuality(item, 1);
+                        updateQualityFor(item, 1);
                     }
                 }
             } else {
-                updateQuality(item, !CONJURED_MANA_CAKE.equals(item.name) ? -1 : -2);
+                updateQualityFor(item, amountToDecrease(item));
             }
             item.sellIn = item.sellIn - 1;
             if (item.sellIn < 0) {
                 if (BACKSTAGE_PASSES.equals(item.name)) {
                     item.quality = 0;
                 } else {
-                    updateQuality(item, AGED_BRIE.equals(item.name) ? 1 : -1);
+                    updateQualityFor(item, AGED_BRIE.equals(item.name) ? 1 : amountToDecrease(item));
                 }
             }
         }
     }
 
-    private void updateQuality(Item item, int amountToChangeQuality) {
+    private int amountToDecrease(Item item) {
+        return CONJURED_MANA_CAKE.equals(item.name) ? -2 : -1;
+    }
+
+    private void updateQualityFor(Item item, int amountToChangeQuality) {
         if (increasingQualityAndQualityIsNotAtMaximum(item, amountToChangeQuality)) {
             item.quality = item.quality + amountToChangeQuality;
-        } else if (decreasingQualityAndQualityIsNotZero(item, amountToChangeQuality)) {
+        } else if (decreasingQualityAndQualityIsNotAtZero(item, amountToChangeQuality)) {
             item.quality = item.quality + amountToChangeQuality;
         }
     }
@@ -61,7 +64,7 @@ public class GildedRose {
         return item.quality < MAXIMUM_QUALITY && amountToChangeQuality > 0;
     }
 
-    private boolean decreasingQualityAndQualityIsNotZero(Item item, int amountToChangeQuality) {
+    private boolean decreasingQualityAndQualityIsNotAtZero(Item item, int amountToChangeQuality) {
         return item.quality > 0 && amountToChangeQuality < 0;
     }
 }
